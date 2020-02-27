@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
     ActivityIndicator,
     AppState,
@@ -9,13 +9,14 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import { globalStyles, ICoordinate, IRoute, StorageKey, Task } from '../data.module';
+import {globalStyles, ICoordinate, IRoute, StorageKey, Task} from '../data.module';
 import * as TaskManager from 'expo-task-manager';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import * as LocationService from '../service/LocationService';
-import { defineTrackTask } from '../TaskManager';
-import { DrawerActions, NavigationActions, StackActions } from 'react-navigation';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {defineTrackTask} from '../TaskManager';
+import {StackActions} from 'react-navigation';
+import {StackNavigationProp} from '@react-navigation/stack';
+import * as Firebase from '../service/FirebaseService';
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -90,6 +91,7 @@ export default class RouteScreen extends Component<IProps, IState> {
     private stopRoute = async () => {
         const route = this.state.route;
         route.destination = await LocationService.getCurrentPosition();
+        Firebase.saveRoute(route);
         //TODO send route via props, why is this currently not working?
         this.props.navigation.dispatch(StackActions.replace(
             {

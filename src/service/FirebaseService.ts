@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import '@firebase/firestore';
+import {IRoute} from "../data.module";
 
 const firebaseConfig = {
     apiKey: "AIzaSyACirAt4NmsMVi8gsDrBzteZh3Ms2oROBY",
@@ -8,11 +8,33 @@ const firebaseConfig = {
 };
 
 export function initialize() {
-    firebase.initializeApp(firebaseConfig);
+    try {
+        firebase.initializeApp(firebaseConfig);
+    } catch (e) {
+    }
 }
 
-export async function getUsers() {
-    const db = firebase.firestore();
-    const response = await db.collection('user').get();
-    console.log(response);
+export function signUp(email: string, password: string) {
+    return firebase.auth().createUserWithEmailAndPassword(email, password);
+}
+
+export function login(email: string, password: string) {
+    return firebase.auth().signInWithEmailAndPassword(email, password);
+}
+
+export function saveRoute(route: IRoute) {
+    return firebase.database().ref(`user/${firebase.auth().currentUser.uid}/routes`)
+        .push({...route});
+}
+
+export function getRoutes(): Promise<IRoute[]> {
+    return firebase.database().ref(`user/${firebase.auth().currentUser.uid}/routes`)
+        .once('value')
+        .then((snapshot) => Object.values(snapshot.val()));
+}
+
+export function onAuthChanged(callback) {
+    firebase
+        .auth()
+        .onAuthStateChanged(callback);
 }

@@ -56,6 +56,10 @@ export const globalStyles = {
         alignItems: 'center',
         justifyContent: 'center',
     },
+    errorText: {
+      color: 'red',
+      fontSize: 10,
+    },
     input: {
         width: '80%',
         backgroundColor: 'white',
