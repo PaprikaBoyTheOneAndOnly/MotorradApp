@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Button, TextInput, Alert, AsyncStorage} from 'react-native';
+import {Alert, Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import {globalStyles} from '../data.module';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {StackActions} from "react-navigation";
+import {StackActions} from 'react-navigation';
 import * as Firebase from '../service/FirebaseService';
 
 interface IProps {
@@ -18,6 +18,8 @@ interface IState {
 }
 
 export default class Login extends Component<IProps, IState> {
+    private loginPressed = false;
+
     constructor(props) {
         super(props);
         //TODO: Safe userdata in asyncstorage and log in automatically to be more user friendly
@@ -48,17 +50,23 @@ export default class Login extends Component<IProps, IState> {
             }));
     }
 
-    tryToLogin = () => {
-        if (this.validInputs()) {
-            Firebase.login(this.state.email, this.state.password)
-                .then(() => this.relocate())
-                .catch(err => this.setState({failedMsg: err.message}));
+    tryToLogin = async () => {
+        if (!this.loginPressed && this.validInputs()) {
+            this.loginPressed = true;
+            try {
+                await Firebase.login(this.state.email, this.state.password);
+                this.relocate();
+                this.loginPressed = false;
+            } catch (err) {
+                this.loginPressed = false;
+                this.setState({failedMsg: err.message});
+            }
         }
     };
 
     tryToSignIn = () => {
         if (this.validInputs()) {
-            Alert.alert("Sign In",
+            Alert.alert('Sign In',
                 `Do you really want to create an account with "${this.state.email}"`,
                 [
                     {
@@ -97,8 +105,10 @@ export default class Login extends Component<IProps, IState> {
         );
     }
 }
+
 const styles = StyleSheet.create(
-    // @ts-ignore
+// @ts-ignore
     {
         ...globalStyles,
-    });
+    }
+);

@@ -1,5 +1,5 @@
 import * as TaskManager from 'expo-task-manager';
-import { ICoordinate, StorageKey, Task } from './data.module';
+import { ICoordinate, StorageKey, Task } from '../data.module';
 import { AsyncStorage } from 'react-native';
 import { LocationData } from 'expo-location';
 import moment from 'moment';

@@ -1,22 +1,15 @@
 import React, {Component} from 'react';
-import {
-    ActivityIndicator,
-    AppState,
-    AppStateStatus,
-    AsyncStorage,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
-} from 'react-native';
-import {globalStyles, ICoordinate, IRoute, StorageKey, Task} from '../data.module';
+import {AppState, AppStateStatus, AsyncStorage, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {globalStyles, ICoordinate, IRoute, Route, StorageKey, Task} from '../data.module';
 import * as TaskManager from 'expo-task-manager';
 import MapView, {Marker} from 'react-native-maps';
 import * as LocationService from '../service/LocationService';
-import {defineTrackTask} from '../TaskManager';
+import {defineTrackTask} from '../service/TaskManager';
 import {StackActions} from 'react-navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
 import * as Firebase from '../service/FirebaseService';
+import ActivityRunner from "./ActivityRunner";
+import {LocationData} from "expo-location";
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -30,7 +23,7 @@ interface IState {
 
 defineTrackTask();
 
-export default class RouteScreen extends Component<IProps, IState> {
+export default class TrackRoute extends Component<IProps, IState> {
     static navigationOptions = ({navigation}) => (navigation.state.params.options);
 
     constructor(props) {
@@ -43,18 +36,20 @@ export default class RouteScreen extends Component<IProps, IState> {
         };
     }
 
+    addRoute = (coordinate: LocationData) => {
+        const route = this.state.route;
+        const coords: ICoordinate = {
+            longitude: coordinate.coords.longitude,
+            latitude: coordinate.coords.latitude
+        };
+        route.polylineCoordinates.push(coords);
+
+        this.setState({route});
+    };
+
     componentDidMount() {
-        LocationService.subscribeToPosition((coordinate) => {
-            const route = this.state.route;
-            const coords: ICoordinate = {
-                longitude: coordinate.coords.longitude,
-                latitude: coordinate.coords.latitude
-            };
-            route.polylineCoordinates.push(coords);
-
-            this.setState({route});
-        }).then((remove) => this.setState({remove: remove.remove}));
-
+        LocationService.subscribeToPosition(this.addRoute)
+            .then((remove) => this.setState({remove: remove.remove}));
         LocationService.getCurrentPosition()
             .then(coordinate => this.setState({initialCoordinates: coordinate}));
         AppState.addEventListener('change', this.handleAppChange);
@@ -89,10 +84,11 @@ export default class RouteScreen extends Component<IProps, IState> {
     };
 
     private stopRoute = async () => {
-        const route = this.state.route;
+        const route = this.state.route as Route;
         route.destination = await LocationService.getCurrentPosition();
+        //TODO is not right
+        route.calculateDistance();
         Firebase.saveRoute(route);
-        //TODO send route via props, why is this currently not working?
         this.props.navigation.dispatch(StackActions.replace(
             {
                 routeName: 'Route',
@@ -120,12 +116,7 @@ export default class RouteScreen extends Component<IProps, IState> {
                 </View>
             );
         }
-        return (
-            <View style={styles.container}>
-                <ActivityIndicator size="large" color="#000000"/>
-                <Text>{'\n'}Loading map</Text>
-            </View>
-        );
+        return <ActivityRunner text={"Loading Map"}/>;
     }
 }
 
@@ -155,4 +146,5 @@ const styles = StyleSheet.create(
             width: 75,
             borderRadius: 150,
         },
-    });
+    }
+);

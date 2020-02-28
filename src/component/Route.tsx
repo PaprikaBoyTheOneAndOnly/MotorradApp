@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { AsyncStorage, Text, View } from 'react-native';
-import { IRoute, stackConfig, StorageKey } from '../data.module';
-import MapView, { Polyline } from 'react-native-maps';
-import { NavigationActions, StackActions } from 'react-navigation';
-import {StackNavigationProp} from "@react-navigation/stack";
+import React, {Component} from 'react';
+import {StyleSheet, View} from 'react-native';
+import {globalStyles, IRoute, stackConfig} from '../data.module';
+import MapView, {Polyline} from 'react-native-maps';
+import {StackNavigationProp} from '@react-navigation/stack';
+import ActivityRunner from "./ActivityRunner";
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -14,6 +14,11 @@ interface IState {
 }
 
 export default class Route extends Component<IProps, IState> {
+    static navigationOptions = ({navigation}) => ({
+        ...stackConfig,
+        headerTitle: navigation.state.params.route.name,
+    });
+
     constructor(props) {
         super(props);
         this.state = {
@@ -23,10 +28,6 @@ export default class Route extends Component<IProps, IState> {
 
     componentDidMount() {
         this.setState({route: this.props.navigation.getParam('route')});
-    }
-
-    componentWillUnmount() {
-
     }
 
     render() {
@@ -43,14 +44,27 @@ export default class Route extends Component<IProps, IState> {
             coordinates.push(route.destination);
 
             return (
-                <View style={{flex: 1}}>
-                    <MapView style={{flex: 1}} initialRegion={initialRegion} showsUserLocation>
-                        <Polyline coordinates={route.polylineCoordinates} strokeWidth={4}
+                <View style={{...styles.container}}>
+                    <MapView style={styles.mapView} initialRegion={initialRegion}
+                             showsUserLocation>
+                        <Polyline coordinates={coordinates} strokeWidth={4}
                                   strokeColor={'#FCAD03'}/>
                     </MapView>
                 </View>
             );
         }
-        return (<Text>Loading</Text>);
+        return <ActivityRunner text={"Loading Route"}/>;
     }
 }
+
+const styles = StyleSheet.create(
+// @ts-ignore
+    {
+        ...globalStyles,
+        mapView: {
+            flex: 1,
+            width: '100%',
+            height: '100%'
+        }
+    }
+);

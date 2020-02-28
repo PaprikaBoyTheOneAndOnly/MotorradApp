@@ -7,26 +7,25 @@ import Map from './src/component/Map';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer} from 'react-navigation';
-import RouteScreen from './src/component/RouteScreen';
+import TrackRoute from './src/component/TrackRoute';
 import {stackConfig} from './src/data.module';
 import Route from './src/component/Route';
 import * as Location from 'expo-location';
 import * as Firebase from './src/service/FirebaseService';
-import Login from "./src/component/Login";
+import Login from './src/component/Login';
 
 Firebase.initialize();
-
 
 const HomeStack = createStackNavigator(
     {
         Home,
-        RouteScreen,
+        TrackRoute,
         Route
     }, stackConfig);
 
 const SettingsStack = createStackNavigator({Settings}, stackConfig);
 
-const RoutesStack = createStackNavigator({Routes}, stackConfig);
+const RoutesStack = createStackNavigator({Routes, Route}, stackConfig);
 
 const PhotosStack = createStackNavigator({Photos}, stackConfig);
 

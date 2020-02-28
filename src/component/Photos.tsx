@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import {globalStyles} from "../data.module";
 
 interface IProps {}
 
@@ -15,11 +16,9 @@ export default class Photos extends Component<IProps, IState> {
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
+const styles = StyleSheet.create(
+// @ts-ignore
+    {
+        ...globalStyles,
+    }
+);

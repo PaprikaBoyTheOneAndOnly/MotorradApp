@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { Button, StyleSheet, TextInput, View } from 'react-native';
-import { globalStyles, Route, stackConfig } from '../data.module';
+import React, {Component} from 'react';
+import {Button, StyleSheet, TextInput, View} from 'react-native';
+import {globalStyles, Route, stackConfig} from '../data.module';
 import * as LocationService from '../service/LocationService';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -25,10 +25,11 @@ export default class Home extends Component<IProps, IState> {
         return (
             <View style={styles.container}>
                 <TextInput style={styles.input} value={this.state.routeName}
+                           placeholder={'Routename'}
                            onChangeText={(text) => this.setState({routeName: text})}/>
                 <Button title={'Start route'} onPress={async () => {
                     const origin = await LocationService.getCurrentPosition();
-                    this.props.navigation.navigate('RouteScreen', {
+                    this.props.navigation.navigate('TrackRoute', {
                         options: {
                             ...stackConfig,
                             title: this.state.routeName,
@@ -36,13 +37,16 @@ export default class Home extends Component<IProps, IState> {
                         title: this.state.routeName,
                         route: new Route(this.state.routeName, origin),
                     });
+                    this.setState({routeName: ''});
                 }}/>
             </View>
         );
     }
 }
+
 const styles = StyleSheet.create(
 // @ts-ignore
-{
-    ...globalStyles,
-});
+    {
+        ...globalStyles,
+    }
+);

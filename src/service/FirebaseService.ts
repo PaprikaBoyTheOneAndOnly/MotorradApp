@@ -1,10 +1,10 @@
 import firebase from 'firebase';
-import {IRoute} from "../data.module";
+import {IRoute} from '../data.module';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyACirAt4NmsMVi8gsDrBzteZh3Ms2oROBY",
-    projectId: "motorradapp-267508",
-    databaseURL: "https://motorradapp-267508.firebaseio.com",
+    apiKey: 'AIzaSyACirAt4NmsMVi8gsDrBzteZh3Ms2oROBY',
+    projectId: 'motorradapp-267508',
+    databaseURL: 'https://motorradapp-267508.firebaseio.com',
 };
 
 export function initialize() {
