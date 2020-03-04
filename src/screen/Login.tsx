@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {Alert, Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Alert, Keyboard, StyleSheet, Text, TextInput, View} from 'react-native';
 import {globalStyles} from '../data.module';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StackActions} from 'react-navigation';
 import * as Firebase from '../service/FirebaseService';
+import {Button} from 'react-native-elements';
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -11,9 +12,9 @@ interface IProps {
 
 interface IState {
     email: string,
-    emailLengthError: boolean,
+    emailLengthError: string,
     password: string,
-    passwordLengthError: boolean,
+    passwordLengthError: string,
     failedMsg: string,
 }
 
@@ -26,21 +27,29 @@ export default class Login extends Component<IProps, IState> {
         this.state = {
             email: null,
             password: null,
-            emailLengthError: false,
-            passwordLengthError: false,
-            failedMsg: null,
+            emailLengthError: '',
+            passwordLengthError: '',
+            failedMsg: '',
         };
     }
 
     private validInputs(): boolean {
+        let err = true;
         if (!this.state.email || this.state.email.length < 5) {
-            this.setState({emailLengthError: true});
-            return false;
-        } else if (!this.state.password || this.state.password.length < 5) {
-            this.setState({passwordLengthError: true});
-            return false;
+            this.setState({emailLengthError: 'Email must be at least 5 characters'});
+            err = false;
+        } else {
+            this.setState({emailLengthError: ''});
         }
-        return true;
+
+        if (!this.state.password || this.state.password.length < 5) {
+            this.setState({passwordLengthError: 'Password must be at least 5 characters'});
+            err = false;
+        } else {
+            this.setState({passwordLengthError: ''});
+        }
+
+        return err;
     }
 
     relocate() {
@@ -51,6 +60,7 @@ export default class Login extends Component<IProps, IState> {
     }
 
     tryToLogin = async () => {
+        Keyboard.dismiss();
         if (!this.loginPressed && this.validInputs()) {
             this.loginPressed = true;
             try {
@@ -64,16 +74,21 @@ export default class Login extends Component<IProps, IState> {
         }
     };
 
-    tryToSignIn = () => {
+    tryToSignUp = () => {
         if (this.validInputs()) {
             Alert.alert('Sign In',
                 `Do you really want to create an account with "${this.state.email}"`,
                 [
                     {
                         text: 'Ok',
-                        onPress: () => Firebase.signUp(this.state.email, this.state.password)
-                            .then(() => this.relocate())
-                            .catch(err => this.setState({failedMsg: err.message}))
+                        onPress: () => {
+                            Firebase.signUp(this.state.email, this.state.password)
+                                .then(() => this.relocate())
+                                .catch(err => {
+                                    Keyboard.dismiss();
+                                    this.setState({failedMsg: err.message});
+                                })
+                        }
                     },
                     {
                         text: 'No',
@@ -89,18 +104,21 @@ export default class Login extends Component<IProps, IState> {
                 <TextInput style={styles.input} value={this.state.email}
                            placeholder={'Email'}
                            onChangeText={(email) => this.setState({email})}/>
-                {this.state.emailLengthError &&
-                <Text style={styles.errorText}>Email must be at least 5 characters</Text>}
+                <View style={styles.errorBox}>
+                    <Text style={styles.errorText}>{this.state.emailLengthError}</Text>
+                </View>
                 <TextInput style={styles.input} value={this.state.password}
                            placeholder={'Password'}
                            secureTextEntry
                            onChangeText={(password) => this.setState({password})}/>
-                {this.state.passwordLengthError &&
-                <Text style={styles.errorText}>Password must be at least 5 characters</Text>}
-                <Button onPress={this.tryToLogin} title={'Login'}/>
-                <Button onPress={this.tryToSignIn} title={'SignUp'}/>
-                {this.state.failedMsg &&
-                <Text style={styles.errorText}>{this.state.failedMsg}</Text>}
+                <View style={styles.errorBox}>
+                    <Text style={styles.errorText}>{this.state.passwordLengthError}</Text>
+                </View>
+                <View style={styles.errorBox}>
+                    <Text style={styles.errorText}>{this.state.failedMsg}</Text>
+                </View>
+                <Button style={styles.button} onPress={this.tryToLogin} title={'Login'}/>
+                <Button style={styles.button} onPress={this.tryToSignUp} title={'SignUp'} type={'outline'}/>
             </View>
         );
     }
@@ -110,5 +128,9 @@ const styles = StyleSheet.create(
 // @ts-ignore
     {
         ...globalStyles,
+        button: {
+            width: 100,
+            margin: 5,
+        },
     }
 );

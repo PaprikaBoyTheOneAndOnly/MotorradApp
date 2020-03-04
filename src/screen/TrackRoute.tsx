@@ -8,8 +8,8 @@ import {defineTrackTask} from '../service/TaskManager';
 import {StackActions} from 'react-navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
 import * as Firebase from '../service/FirebaseService';
-import ActivityRunner from "./ActivityRunner";
-import {LocationData} from "expo-location";
+import ActivityRunner from '../component/ActivityRunner';
+import {LocationData} from 'expo-location';
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -116,7 +116,7 @@ export default class TrackRoute extends Component<IProps, IState> {
                 </View>
             );
         }
-        return <ActivityRunner text={"Loading Map"}/>;
+        return <ActivityRunner text={'Loading Map'}/>;
     }
 }
 

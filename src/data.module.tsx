@@ -1,3 +1,6 @@
+import HamburgerMenu from './component/HamburgerMenu';
+import React from 'react';
+
 export enum Task {
     TRACK_ROUTE = 'TrackRoute',
 }
@@ -19,6 +22,11 @@ export interface IRoute {
     distance: number;
     polylineCoordinates: ICoordinate[];
 }
+
+export interface IRouteKey {
+    [key: string]: IRoute;
+}
+
 
 export class Route implements IRoute {
     name: string;
@@ -87,15 +95,23 @@ export class Route implements IRoute {
     }
 }
 
+export const staticNavigationOptions = (navigation) => {
+    return {
+        ...stackConfig,
+        headerLeft: () => <HamburgerMenu navigation={navigation}/>
+    }
+};
+
 export const stackConfig = {
-        defaultNavigationOptions: {
-            headerStyle: {
-                backgroundColor: 'rgba(0,0,0,0.9)',
-                height: 70,
-            },
-            headerTintColor: 'white',
+    defaultNavigationOptions: {
+        gestureEnabled: false,
+        headerStyle: {
+            backgroundColor: 'rgba(0,0,0,0.9)',
+            height: 70,
         },
-    };
+        headerTintColor: 'white',
+    },
+};
 
 export const
     globalStyles = {
@@ -107,7 +123,12 @@ export const
         },
         errorText: {
             color: 'red',
-            fontSize: 10,
+            fontSize: 12,
+        },
+        errorBox: {
+            height: 20,
+            alignContent: 'center',
+            justifyContent: 'center',
         },
         input: {
             width: '80%',

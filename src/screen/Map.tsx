@@ -1,14 +1,11 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
-import {globalStyles, ICoordinate, IRoute, stackConfig} from "../data.module";
-import MapView, {Polyline} from "react-native-maps";
-import * as Firebase from "../service/FirebaseService";
-import * as LocationService from "../service/LocationService";
-import {StackNavigationProp} from "@react-navigation/stack";
-import ActivityRunner from "./ActivityRunner";
-import {Icon} from "react-native-elements";
-import {StackActions} from "react-navigation";
-
+import {StyleSheet, View} from 'react-native';
+import {globalStyles, ICoordinate, IRoute, staticNavigationOptions} from '../data.module';
+import MapView, {Marker, Polyline} from 'react-native-maps';
+import * as Firebase from '../service/FirebaseService';
+import * as LocationService from '../service/LocationService';
+import {StackNavigationProp} from '@react-navigation/stack';
+import ActivityRunner from '../component/ActivityRunner';
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -20,10 +17,8 @@ interface IState {
 }
 
 export default class Map extends Component<IProps, IState> {
-    //TODO add hamburger menu to other screens
     static navigationOptions = ({navigation}) => ({
-        ...stackConfig,
-        headerLeft: () => <View style={{left: 10}} ><Icon name={'menu'} color={'white'} onPress={() => navigation.openDrawer()}/></View>,
+        ...staticNavigationOptions(navigation)
     });
 
     constructor(props) {
@@ -51,7 +46,6 @@ export default class Map extends Component<IProps, IState> {
                 latitudeDelta: 0.04,
                 longitudeDelta: 0.04,
             };
-
             const polylines = this.state.routes.map((route, index) => {
                 const coordinates = route.polylineCoordinates;
                 coordinates.unshift(route.origin);
@@ -59,11 +53,17 @@ export default class Map extends Component<IProps, IState> {
                 return <Polyline key={index} coordinates={coordinates}
                                  strokeWidth={4} strokeColor={'#FCAD03'}/>
             });
+            const markers = this.state.routes.map((route, index) =>
+                [<Marker key={index} coordinate={route.origin} title={`Start ${route.name}`}/>,
+                    <Marker key={index+ 'marker2'} coordinate={route.destination} title={`End ${route.name}`}/>])
+                .flat();
+
             return (
                 <View style={{...styles.container}}>
                     <MapView style={styles.mapView} initialRegion={initialRegion}
                              showsUserLocation>
                         {polylines}
+                        {markers}
                     </MapView>
                 </View>
             );

@@ -1,6 +1,6 @@
-import React, {Component} from "react";
-import {ActivityIndicator, StyleSheet, Text, View} from "react-native";
-import {globalStyles} from "../data.module";
+import React, {Component} from 'react';
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import {globalStyles} from '../data.module';
 
 interface IProps {
     text: string

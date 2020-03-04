@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {globalStyles, IRoute, stackConfig} from '../data.module';
-import MapView, {Polyline} from 'react-native-maps';
+import MapView, {Marker, Polyline} from 'react-native-maps';
 import {StackNavigationProp} from '@react-navigation/stack';
-import ActivityRunner from "./ActivityRunner";
+import ActivityRunner from '../component/ActivityRunner';
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -47,13 +47,15 @@ export default class Route extends Component<IProps, IState> {
                 <View style={{...styles.container}}>
                     <MapView style={styles.mapView} initialRegion={initialRegion}
                              showsUserLocation>
+                        <Marker coordinate={route.origin} title={`Start ${route.name}`}/>
                         <Polyline coordinates={coordinates} strokeWidth={4}
                                   strokeColor={'#FCAD03'}/>
+                        <Marker coordinate={route.destination} title={`End ${route.name}`}/>
                     </MapView>
                 </View>
             );
         }
-        return <ActivityRunner text={"Loading Route"}/>;
+        return <ActivityRunner text={'Loading Route'}/>;
     }
 }
 
