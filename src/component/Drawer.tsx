@@ -2,6 +2,20 @@ import {SafeAreaView, ScrollView} from 'react-navigation';
 import {DrawerItems} from 'react-navigation-drawer';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
+import * as Firebase from '../service/FirebaseService';
+
+
+function logout(props) {
+    Firebase.logout().then();
+    props.navigation.dispatch({
+        type: 'Navigation/NAVIGATE',
+        routeName: 'Login',
+        action: {
+            type: 'Navigation/NAVIGATE',
+            routeName: 'Login',
+        }
+    });
+}
 
 export default function Drawer(props) {
     return (
@@ -11,17 +25,8 @@ export default function Drawer(props) {
                           forceInset={{top: 'always', horizontal: 'never'}}>
                 <DrawerItems {...props} />
             </SafeAreaView>
-            <TouchableOpacity onPress={() => {
-                props.navigation.dispatch({
-                    type: 'Navigation/NAVIGATE',
-                    routeName: 'Login',
-                    action: {
-                        type: 'Navigation/NAVIGATE',
-                        routeName: 'Login',
-                    }
-                });
-            }}>
-                <Text style={{color: 'red', fontSize: 16, margin: 16}}>Logout</Text>
+            <TouchableOpacity onPress={() => logout(props)}>
+                <Text style={styles.logoutText}>Logout</Text>
             </TouchableOpacity>
         </ScrollView>);
 };
@@ -41,5 +46,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'red',
         position: 'absolute',
         bottom: 0
-    }
+    },
+    logoutText: {
+        color: 'red',
+        fontSize: 16,
+        margin: 16
+    },
 });

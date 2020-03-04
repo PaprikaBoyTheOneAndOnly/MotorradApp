@@ -22,6 +22,10 @@ export function login(email: string, password: string) {
     return firebase.auth().signInWithEmailAndPassword(email, password);
 }
 
+export function logout() {
+    return firebase.auth().signOut();
+}
+
 export function saveRoute(route: IRoute) {
     return firebase.database()
         .ref(`user/${firebase.auth().currentUser.uid}/routes`)
