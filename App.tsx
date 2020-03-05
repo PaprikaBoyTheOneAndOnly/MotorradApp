@@ -13,8 +13,8 @@ import Route from './src/screen/Route';
 import * as Firebase from './src/service/FirebaseService';
 import * as LocationService from './src/service/LocationService';
 import Login from './src/screen/Login';
-import Drawer from "./src/component/Drawer";
-import {StyleSheet, Text, View} from "react-native";
+import Drawer from './src/component/Drawer';
+import {StyleSheet, Text, View} from 'react-native';
 
 Firebase.initialize();
 
@@ -43,9 +43,7 @@ const MainStack = createDrawerNavigator(
     },
     {
         drawerBackgroundColor: 'rgba(0,0,0,0.5)',
-        contentOptions: {
-            inactiveTintColor: 'white',
-        },
+        contentOptions: {inactiveTintColor: 'white'},
         contentComponent: Drawer
 
     });
@@ -54,10 +52,7 @@ const MainStack = createDrawerNavigator(
 const AuthStack = createStackNavigator({Login, MainStack}, {
     defaultNavigationOptions: {
         gestureEnabled: false,
-        headerStyle: {
-
-            height: 0,
-        },
+        headerStyle: {height: 0},
         headerTintColor: 'transparent',
     }
 });
@@ -92,9 +87,8 @@ export default class App extends Component<{}, IAppState> {
                     <Text style={styles.text}>You can change the permission in your device settings.</Text>
                 </View>);
         }
-        return (
-            <AppContainer/>
-        );
+
+        return <AppContainer/>;
     }
 }
 

@@ -1,8 +1,8 @@
-import { ICoordinate } from '../data.module';
+import {ICoordinate} from '../data.module';
 import axios from 'axios';
-import { Platform } from 'react-native';
+import {Platform} from 'react-native';
 
-//Just keep in order i need it later
+//This class is unused yet, just keep it in order i need it later
 export function getPolylineRoute(from: ICoordinate, to: ICoordinate, wayPoints: ICoordinate[]): Promise<ICoordinate[]> {
     const platform = Platform.OS;
     // This API provides a big amount of currently unused information like way descriptions for all sections, but i have planed to use them in the future.
@@ -18,14 +18,12 @@ export function getPolylineRoute(from: ICoordinate, to: ICoordinate, wayPoints: 
         `&legAttributes=shape`;
     return axios.get(key)
         .then(res => {
-            const coords = res.data.response.route[0].leg[0].shape.map(m => {
+            return res.data.response.route[0].leg[0].shape.map(m => {
                 let latlong = m.split(',');
                 return {
                     latitude: parseFloat(latlong[0]),
                     longitude: parseFloat(latlong[1])
                 };
             });
-            console.log(coords);
-            return coords;
         }).catch(err => console.log('error', err));
 }

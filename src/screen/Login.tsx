@@ -35,6 +35,7 @@ export default class Login extends Component<IProps, IState> {
 
     private validInputs(): boolean {
         let err = true;
+
         if (!this.state.email || this.state.email.length < 5) {
             this.setState({emailLengthError: 'Email must be at least 5 characters'});
             err = false;
@@ -77,8 +78,7 @@ export default class Login extends Component<IProps, IState> {
     tryToSignUp = () => {
         if (this.validInputs()) {
             Alert.alert('Sign In',
-                `Do you really want to create an account with "${this.state.email}"`,
-                [
+                `Do you really want to create an account with "${this.state.email}"`, [
                     {
                         text: 'Ok',
                         onPress: () => {

@@ -4,7 +4,6 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import * as Firebase from '../service/FirebaseService';
 
-
 function logout(props) {
     Firebase.logout().then();
     props.navigation.dispatch({
@@ -28,7 +27,8 @@ export default function Drawer(props) {
             <TouchableOpacity onPress={() => logout(props)}>
                 <Text style={styles.logoutText}>Logout</Text>
             </TouchableOpacity>
-        </ScrollView>);
+        </ScrollView>
+    );
 };
 
 const styles = StyleSheet.create({

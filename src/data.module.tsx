@@ -27,7 +27,6 @@ export interface IRouteKey {
     [key: string]: IRoute;
 }
 
-
 export class Route implements IRoute {
     name: string;
     origin: ICoordinate;

@@ -2,11 +2,9 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {globalStyles, staticNavigationOptions} from '../data.module';
 
-interface IProps {
-}
+interface IProps {}
 
-interface IState {
-}
+interface IState {}
 
 export default class Settings extends Component<IProps, IState> {
     static navigationOptions = ({navigation}) => ({

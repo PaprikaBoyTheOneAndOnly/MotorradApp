@@ -48,10 +48,10 @@ export default class TrackRoute extends Component<IProps, IState> {
     };
 
     componentDidMount() {
-        LocationService.subscribeToPosition(this.addRoute)
-            .then((remove) => this.setState({remove: remove.remove}));
         LocationService.getCurrentPosition()
             .then(coordinate => this.setState({initialCoordinates: coordinate}));
+        LocationService.subscribeToPosition(this.addRoute)
+            .then((remove) => this.setState({remove: remove.remove}));
         AppState.addEventListener('change', this.handleAppChange);
     }
 
@@ -86,7 +86,7 @@ export default class TrackRoute extends Component<IProps, IState> {
     private stopRoute = async () => {
         const route = this.state.route as Route;
         route.destination = await LocationService.getCurrentPosition();
-        //TODO is not right
+        //TODO calculation is not right
         route.calculateDistance();
         Firebase.saveRoute(route);
         this.props.navigation.dispatch(StackActions.replace(
@@ -105,10 +105,8 @@ export default class TrackRoute extends Component<IProps, IState> {
             };
             return (
                 <View style={styles.container}>
-                    <MapView style={{height: '100%', width: '100%'}}
-                             initialRegion={initialRegion} showsUserLocation>
-                        <Marker coordinate={this.state.initialCoordinates}
-                                title={'Start'}/>
+                    <MapView style={{height: '100%', width: '100%'}} initialRegion={initialRegion} showsUserLocation>
+                        <Marker coordinate={this.state.initialCoordinates} title={'Start'}/>
                     </MapView>
                     <TouchableOpacity style={styles.innerView} onPress={() => this.stopRoute()}>
                         <Text style={styles.innerButton}>Stop</Text>

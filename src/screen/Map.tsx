@@ -55,7 +55,7 @@ export default class Map extends Component<IProps, IState> {
             });
             const markers = this.state.routes.map((route, index) =>
                 [<Marker key={index} coordinate={route.origin} title={`Start ${route.name}`}/>,
-                    <Marker key={index+ 'marker2'} coordinate={route.destination} title={`End ${route.name}`}/>])
+                    <Marker key={index + 'marker2'} coordinate={route.destination} title={`End ${route.name}`}/>])
                 .flat();
 
             return (

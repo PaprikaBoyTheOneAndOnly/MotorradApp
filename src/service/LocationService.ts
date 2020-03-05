@@ -1,6 +1,6 @@
 import {ICoordinate, Task} from '../data.module';
 import * as Location from 'expo-location';
-import {PermissionResponse} from "expo-location";
+import {PermissionResponse} from 'expo-location';
 
 //TODO: set accuracy in settings
 const trackingOptions = {

@@ -7,7 +7,6 @@ interface IProps {
     navigation: StackNavigationProp<any>;
 }
 
-
 export default class HamburgerMenu extends Component<IProps, {}> {
     constructor(props) {
         super(props);
@@ -18,6 +17,7 @@ export default class HamburgerMenu extends Component<IProps, {}> {
             <View style={{left: 10}}>
                 <Icon name={'menu'} color={'white'}
                       onPress={() => this.props.navigation.openDrawer()}/>
-            </View>);
+            </View>
+        );
     }
 }

@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as Firebase from '../service/FirebaseService';
+import {extractKeys} from '../service/FirebaseService';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {globalStyles, IRoute, IRouteKey, staticNavigationOptions} from '../data.module';
 import {ListItem} from 'react-native-elements';
 import ActivityRunner from '../component/ActivityRunner';
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
-import {extractKeys} from '../service/FirebaseService';
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -55,36 +55,42 @@ export default class Routes extends Component<IProps, IState> {
 
     renderRouteItem = ({item, index}, rowMap) => {
         const route: IRoute = extractKeys([item])[0];
+        const swipeRowProps = {
+            key: index,
+            style: styles.itemStyle,
+            disableRightSwipe: true,
+            stopRightSwipe: -100,
+            rightOpenValue: -100,
+            swipeToOpenPercent: 10
+        };
+        const listItemProps = {
+            containerStyle: styles.itemContainerStyle,
+            chevron: true, title: route.name,
+            subtitle: `${Math.round(route.distance * 1000)} km`,
+            subtitleStyle: {opacity: 0.3},
+            onPress: () => this.openRoute(route),
+        };
 
-        return <SwipeRow key={index}
-                         style={styles.itemStyle}
-                         disableRightSwipe
-                         stopRightSwipe={-100}
-                         rightOpenValue={-100}
-                         swipeToOpenPercent={10}>
-            <TouchableOpacity style={styles.hiddenItem}
-                              onPress={() => {
-                                  rowMap[index].closeRow();
-                                  this.deleteRoute(Object.keys(item)[0]);
-                              }}>
-                <Text style={{
-                    color: 'white',
-                    fontSize: 20,
-                }}>Delete</Text>
-            </TouchableOpacity>
-            <ListItem
-                containerStyle={styles.itemContainerStyle}
-                chevron title={route.name}
-                subtitle={`${Math.round(route.distance * 1000)} km`}
-                subtitleStyle={{opacity: 0.3}}
-                onPress={() => this.openRoute(route)}/>
-        </SwipeRow>;
+        return (
+            <SwipeRow {...swipeRowProps}>
+                <TouchableOpacity style={styles.hiddenItem}
+                                  onPress={() => {
+                                      rowMap[index].closeRow();
+                                      this.deleteRoute(Object.keys(item)[0]);
+                                  }}>
+                    <Text style={{color: 'white', fontSize: 20,}}>
+                        Delete
+                    </Text>
+                </TouchableOpacity>
+                <ListItem {...listItemProps}/>
+            </SwipeRow>);
     };
 
     render() {
         if (!this.state.routesLoaded) {
             return <ActivityRunner text={'Loading Routes'}/>;
         }
+
         if (this.state.routes.length === 0) {
             return (
                 <View style={styles.container}>
@@ -92,6 +98,7 @@ export default class Routes extends Component<IProps, IState> {
                 </View>
             );
         }
+
         return (
             <View style={styles.container}>
                 <SwipeListView style={{width: '100%', height: '100%'}}
