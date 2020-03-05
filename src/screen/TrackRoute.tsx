@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {AppState, AppStateStatus, AsyncStorage, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {globalStyles, ICoordinate, IRoute, Route, StorageKey, Task} from '../data.module';
 import * as TaskManager from 'expo-task-manager';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Marker, Polyline} from 'react-native-maps';
 import * as LocationService from '../service/LocationService';
 import {defineTrackTask} from '../service/TaskManager';
 import {StackActions} from 'react-navigation';
@@ -10,6 +10,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import * as Firebase from '../service/FirebaseService';
 import ActivityRunner from '../component/ActivityRunner';
 import {LocationData} from 'expo-location';
+import _ from "lodash";
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -103,10 +104,13 @@ export default class TrackRoute extends Component<IProps, IState> {
                 latitudeDelta: 0.004,
                 longitudeDelta: 0.004,
             };
+            const polyline = <Polyline coordinates={_.cloneDeep(this.state.route.polylineCoordinates)}
+                                       strokeWidth={4} strokeColor={'#FCAD03'}/>;
             return (
                 <View style={styles.container}>
                     <MapView style={{height: '100%', width: '100%'}} initialRegion={initialRegion} showsUserLocation>
                         <Marker coordinate={this.state.initialCoordinates} title={'Start'}/>
+                        {polyline}
                     </MapView>
                     <TouchableOpacity style={styles.innerView} onPress={() => this.stopRoute()}>
                         <Text style={styles.innerButton}>Stop</Text>
