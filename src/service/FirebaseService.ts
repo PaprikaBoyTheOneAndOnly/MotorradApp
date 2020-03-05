@@ -38,6 +38,9 @@ export function getRoutesWithKey(): Promise<IRouteKey[]> {
         .once('value')
         .then((snapshot) => {
             const routes = snapshot.val();
+            if(routes === null) {
+                return [];
+            }
             return Object.keys(routes)
                 .map((key) => {
                     const route = {};

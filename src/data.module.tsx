@@ -124,11 +124,14 @@ export const
         errorText: {
             color: 'red',
             fontSize: 12,
+            flex: 1,
+            textAlign: 'center',
         },
         errorBox: {
-            height: 20,
+            width: '80%',
             alignContent: 'center',
             justifyContent: 'center',
+            flexDirection: 'row',
         },
         input: {
             width: '80%',

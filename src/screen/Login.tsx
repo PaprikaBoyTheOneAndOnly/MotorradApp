@@ -115,7 +115,7 @@ export default class Login extends Component<IProps, IState> {
                     <Text style={styles.errorText}>{this.state.passwordLengthError}</Text>
                 </View>
                 <View style={styles.errorBox}>
-                    <Text style={styles.errorText}>{this.state.failedMsg}</Text>
+                    <Text style={styles.errorText} numberOfLines={2}>{this.state.failedMsg}</Text>
                 </View>
                 <Button style={styles.button} onPress={this.tryToLogin} title={'Login'}/>
                 <Button style={styles.button} onPress={this.tryToSignUp} title={'SignUp'} type={'outline'}/>

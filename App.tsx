@@ -8,12 +8,13 @@ import {createDrawerNavigator} from 'react-navigation-drawer';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer} from 'react-navigation';
 import TrackRoute from './src/screen/TrackRoute';
-import {stackConfig} from './src/data.module';
+import {globalStyles, stackConfig} from './src/data.module';
 import Route from './src/screen/Route';
-import * as Location from 'expo-location';
 import * as Firebase from './src/service/FirebaseService';
+import * as LocationService from './src/service/LocationService';
 import Login from './src/screen/Login';
 import Drawer from "./src/component/Drawer";
+import {StyleSheet, Text, View} from "react-native";
 
 Firebase.initialize();
 
@@ -63,14 +64,48 @@ const AuthStack = createStackNavigator({Login, MainStack}, {
 
 const AppContainer = createAppContainer(AuthStack);
 
-export default class App extends Component<{}, {}> {
+
+interface IAppState {
+    locationPermission: boolean;
+}
+
+export default class App extends Component<{}, IAppState> {
+    constructor(props) {
+        super(props);
+        this.state = {
+            locationPermission: null,
+        }
+    }
+
     componentDidMount() {
-        Location.requestPermissionsAsync().then();
+        LocationService.requestPermissionAsync()
+            .then(perm => {
+                this.setState({locationPermission: perm.granted});
+            });
     }
 
     render() {
+        if (!this.state.locationPermission) {
+            return (
+                <View style={styles.container}>
+                    <Text style={styles.text}>Please allow permission on location usage for this App!</Text>
+                    <Text style={styles.text}>You can change the permission in your device settings.</Text>
+                </View>);
+        }
         return (
             <AppContainer/>
         );
     }
 }
+
+const styles = StyleSheet.create(
+// @ts-ignore
+    {
+        ...globalStyles,
+        text: {
+            margin: 10,
+            width: '90%',
+            textAlign: 'center',
+        }
+    }
+);

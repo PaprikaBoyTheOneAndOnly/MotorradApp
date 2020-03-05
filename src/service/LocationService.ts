@@ -1,5 +1,6 @@
 import {ICoordinate, Task} from '../data.module';
 import * as Location from 'expo-location';
+import {PermissionResponse} from "expo-location";
 
 //TODO: set accuracy in settings
 const trackingOptions = {
@@ -7,6 +8,10 @@ const trackingOptions = {
     accuracy: Location.Accuracy.Low,
     timeInterval: 3000,
 };
+
+export function requestPermissionAsync(): Promise<PermissionResponse> {
+    return Location.requestPermissionsAsync();
+}
 
 export function getCurrentPosition(): Promise<ICoordinate> {
     return Location.getCurrentPositionAsync()

@@ -85,6 +85,13 @@ export default class Routes extends Component<IProps, IState> {
         if (!this.state.routesLoaded) {
             return <ActivityRunner text={'Loading Routes'}/>;
         }
+        if (this.state.routes.length === 0) {
+            return (
+                <View style={styles.container}>
+                    <Text>You have not saved a route yet</Text>
+                </View>
+            );
+        }
         return (
             <View style={styles.container}>
                 <SwipeListView style={{width: '100%', height: '100%'}}

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Blank Template (TypeScript)",
+    "name": "Moto Tracker",
     "slug": "MotorradApp",
     "privacy": "public",
     "sdkVersion": "36.0.0",
@@ -47,6 +47,7 @@
         ]
       }
     },
-    "description": ""
+    "description": "",
+    "githubUrl": "https://github.com/PaprikaBoyTheOneAndOnly/MotorradApp"
   }
 }

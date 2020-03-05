@@ -68,7 +68,7 @@ export default class Map extends Component<IProps, IState> {
                 </View>
             );
         }
-        return <ActivityRunner text={'Load Routes'}/>
+        return <ActivityRunner text={'Loading Routes'}/>
     }
 }
 
