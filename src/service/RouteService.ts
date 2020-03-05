@@ -25,5 +25,5 @@ export function getPolylineRoute(from: ICoordinate, to: ICoordinate, wayPoints: 
                     longitude: parseFloat(latlong[1])
                 };
             });
-        }).catch(err => console.log('error', err));
+        }).catch(err => {});
 }
