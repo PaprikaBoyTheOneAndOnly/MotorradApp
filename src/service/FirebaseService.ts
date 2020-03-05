@@ -43,11 +43,7 @@ export function getRoutesWithKey(): Promise<IRouteKey[]> {
             }
 
             return Object.keys(routes)
-                .map((key) => {
-                    const route = {};
-                    route[key] = routes[key];
-                    return route
-                });
+                .map(key => ({[key]: routes[key]}));
         });
 }
 
