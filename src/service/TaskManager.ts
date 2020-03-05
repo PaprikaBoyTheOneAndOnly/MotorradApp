@@ -23,6 +23,7 @@ export function defineTrackTask() {
         } else {
             // @ts-ignore
             const locations: LocationData[] = data.locations;
+            //TODO: save every coordinate itself and not as one JSON Array in the storage to prevent overwriting(?)
             AsyncStorage.getItem(StorageKey.CURRENT_ROUTE_COORDS)
                 .then((value: string) => {
                     let coords;
