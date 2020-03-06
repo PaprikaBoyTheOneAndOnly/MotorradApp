@@ -81,13 +81,14 @@ export default class Login extends Component<IProps, IState> {
                 `Do you really want to create an account with "${this.state.email}"`, [
                     {
                         text: 'Ok',
-                        onPress: () => {
-                            Firebase.signUp(this.state.email, this.state.password)
-                                .then(() => this.relocate())
-                                .catch(err => {
-                                    Keyboard.dismiss();
-                                    this.setState({failedMsg: err.message});
-                                })
+                        onPress: async () => {
+                            try {
+                                await Firebase.signUp(this.state.email, this.state.password);
+                                this.relocate();
+                            } catch (err) {
+                                Keyboard.dismiss();
+                                this.setState({failedMsg: err.message});
+                            }
                         }
                     },
                     {
