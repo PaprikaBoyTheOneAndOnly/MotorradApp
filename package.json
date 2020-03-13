@@ -14,6 +14,7 @@
     "axios": "^0.19.2",
     "expo": "~36.0.0",
     "expo-background-fetch": "^8.0.0",
+    "expo-image-picker": "^8.0.2",
     "expo-location": "^8.0.0",
     "expo-task-manager": "^8.0.0",
     "firebase": "^7.8.2",

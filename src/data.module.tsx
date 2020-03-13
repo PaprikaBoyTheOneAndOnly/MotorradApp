@@ -21,6 +21,12 @@ export interface IRoute {
     destination: ICoordinate;
     distance: number;
     polylineCoordinates: ICoordinate[];
+    photos: IPhoto[],
+}
+
+export interface IPhoto {
+    url: string,
+    coordinate: ICoordinate,
 }
 
 export interface IRouteKey {
@@ -33,15 +39,18 @@ export class Route implements IRoute {
     destination: ICoordinate;
     polylineCoordinates: ICoordinate[];
     distance: number;
+    photos: IPhoto[];
 
     constructor(name: string,
                 origin: ICoordinate,
                 destination?: ICoordinate,
                 polylineCoordinates?: ICoordinate[],
-                distance?: number) {
+                distance?: number,
+                photos?: IPhoto[]) {
         this.name = name;
         this.destination = destination;
         this.polylineCoordinates = polylineCoordinates ? polylineCoordinates : [];
+        this.photos = photos ? photos : [];
         this.origin = origin;
         this.distance = distance;
     }

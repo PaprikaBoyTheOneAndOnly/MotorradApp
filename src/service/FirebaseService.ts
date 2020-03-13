@@ -27,7 +27,6 @@ export function logout() {
 }
 
 export function saveRoute(route: IRoute) {
-    //TODO save route to AsyncStorage if there is no networkconnection, and load all saved routes on next startup
     return firebase.database()
         .ref(`user/${firebase.auth().currentUser.uid}/routes`)
         .push({...route});

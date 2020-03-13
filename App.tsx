@@ -15,6 +15,9 @@ import * as LocationService from './src/service/LocationService';
 import Login from './src/screen/Login';
 import Drawer from './src/component/Drawer';
 import {StyleSheet, Text, View} from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import RoutePhotos from "./src/screen/RoutePhotos";
+import Photo from "./src/screen/Photo";
 
 Firebase.initialize();
 
@@ -27,9 +30,9 @@ const HomeStack = createStackNavigator(
 
 const SettingsStack = createStackNavigator({Settings}, stackConfig);
 
-const RoutesStack = createStackNavigator({Routes, Route}, stackConfig);
+const RoutesStack = createStackNavigator({Routes, Route, RoutePhotos, Photo}, stackConfig);
 
-const PhotosStack = createStackNavigator({Photos}, stackConfig);
+const PhotosStack = createStackNavigator({Photos, RoutePhotos, Photo}, stackConfig);
 
 const MapStack = createStackNavigator({Map}, stackConfig);
 
@@ -77,6 +80,8 @@ export default class App extends Component<{}, IAppState> {
             .then(perm => {
                 this.setState({locationPermission: perm.granted});
             });
+        ImagePicker.requestCameraRollPermissionsAsync().then();
+        ImagePicker.requestCameraPermissionsAsync().then();
     }
 
     render() {

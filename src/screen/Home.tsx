@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, TextInput, View, Text, Keyboard} from 'react-native';
-import {globalStyles, Route, stackConfig, staticNavigationOptions} from '../data.module';
+import {globalStyles, Route, staticNavigationOptions} from '../data.module';
 import * as LocationService from '../service/LocationService';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Button} from 'react-native-elements';
@@ -36,7 +36,6 @@ export default class Home extends Component<IProps, IState> {
             const origin = await LocationService.getCurrentPosition();
             this.props.navigation.navigate('TrackRoute', {
                 options: {
-                    ...stackConfig,
                     title: this.state.routeName,
                 },
                 title: this.state.routeName,

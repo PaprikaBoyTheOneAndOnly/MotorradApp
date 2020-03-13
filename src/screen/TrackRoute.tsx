@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {AppState, AppStateStatus, AsyncStorage, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {globalStyles, ICoordinate, IRoute, Route, StorageKey, Task} from '../data.module';
+import {globalStyles, ICoordinate, IRoute, Route, stackConfig, StorageKey, Task} from '../data.module';
 import * as TaskManager from 'expo-task-manager';
 import MapView, {Marker, Polyline} from 'react-native-maps';
 import * as LocationService from '../service/LocationService';
@@ -11,6 +11,8 @@ import * as Firebase from '../service/FirebaseService';
 import ActivityRunner from '../component/ActivityRunner';
 import {LocationData} from 'expo-location';
 import _ from "lodash";
+import {Icon} from "react-native-elements";
+import * as ImagePicker from 'expo-image-picker';
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -25,7 +27,29 @@ interface IState {
 defineTrackTask();
 
 export default class TrackRoute extends Component<IProps, IState> {
-    static navigationOptions = ({navigation}) => (navigation.state.params.options);
+    static navigationOptions = ({navigation}) => ({
+        ...stackConfig,
+        ...navigation.state.params.options,
+        headerRight: () => {
+            const cameraOptions = {
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                quality: 0,
+                base64: true,
+            };
+
+            return (
+                <TouchableOpacity style={{marginRight: 20}} onPress={() => {
+                    ImagePicker.launchCameraAsync(cameraOptions).then(response => {
+                        console.log("save");
+                        console.log(response);
+                        // AsyncStorage.mergeItem(`${navigation.state.params.options.title}-PHOTOS`)
+                    });
+                }}>
+                    <Icon name={'camera-alt'} color={'white'}/>
+                </TouchableOpacity>
+            );
+        }
+    });
 
     constructor(props) {
         super(props);
