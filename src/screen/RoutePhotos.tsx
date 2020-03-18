@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {globalStyles, IPhoto, stackConfig} from '../data.module';
-import {StackNavigationProp} from "@react-navigation/stack";
-import {Image} from "react-native-elements";
+import {StackNavigationProp} from '@react-navigation/stack';
+import {Image} from 'react-native-elements';
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -33,14 +33,16 @@ export default class RoutePhotos extends Component<IProps, IState> {
 
     render() {
         const width = Math.round(Dimensions.get('window').width) - 20;
+        const imageStyle = {
+            width: width / 3,
+            height: width / 3,
+            marginBottom: 5
+        };
         const photos = this.state.photos.map((photo, index) =>
-            <TouchableOpacity onPress={() => this.openPhoto(photo)}>
-                <Image key={index} source={{uri: photo.url}} style={{
-                    width: width / 3,
-                    height: width / 3,
-                    marginBottom: 5
-                }} PlaceholderContent={<ActivityIndicator/>}/>
-            </TouchableOpacity>);
+            <TouchableOpacity key={index} onPress={() => this.openPhoto(photo)}>
+                <Image source={{uri: photo.url}} style={imageStyle} PlaceholderContent={<ActivityIndicator/>}/>
+            </TouchableOpacity>
+        );
 
         return (
             <ScrollView style={styles.container}>

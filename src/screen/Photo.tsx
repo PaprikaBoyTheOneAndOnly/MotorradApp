@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {Dimensions, StyleSheet, Text, View, Image as NativeImage} from 'react-native';
+import {Dimensions, Image as NativeImage, StyleSheet, View} from 'react-native';
 import {globalStyles, IPhoto, stackConfig} from '../data.module';
-import {StackNavigationProp} from "@react-navigation/stack";
-import {Image} from "react-native-elements";
-import ActivityRunner from "../component/ActivityRunner";
+import {StackNavigationProp} from '@react-navigation/stack';
+import {Image} from 'react-native-elements';
+import ActivityRunner from '../component/ActivityRunner';
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -17,7 +17,8 @@ interface IState {
 
 export default class Photo extends Component<IProps, IState> {
     static navigationOptions = {
-        ...stackConfig
+        ...stackConfig,
+        headerTitle: 'Photo',
     };
 
     constructor(props) {
@@ -35,17 +36,17 @@ export default class Photo extends Component<IProps, IState> {
     }
 
     render() {
-        if (this.state.height) {
+        if (this.state.height && this.state.width) {
             const width = Dimensions.get('window').width;
             const ratio = width / this.state.width;
+            const style = {
+                width: width,
+                height: this.state.height * ratio,
+            };
 
             return (
                 <View style={{...styles.container, backgroundColor: 'black'}}>
-                    <Image source={{uri: this.state.photo.url}}
-                           style={{
-                               width: width,
-                               height: this.state.height * ratio,
-                           }}/>
+                    <Image source={{uri: this.state.photo.url}} style={style}/>
                 </View>
             );
         }

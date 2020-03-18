@@ -21,7 +21,6 @@ export default class Home extends Component<IProps, IState> {
 
     constructor(props) {
         super(props);
-
         this.state = {
             routeName: null,
             error: '',

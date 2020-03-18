@@ -16,8 +16,8 @@ import Login from './src/screen/Login';
 import Drawer from './src/component/Drawer';
 import {StyleSheet, Text, View} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import RoutePhotos from "./src/screen/RoutePhotos";
-import Photo from "./src/screen/Photo";
+import RoutePhotos from './src/screen/RoutePhotos';
+import Photo from './src/screen/Photo';
 
 Firebase.initialize();
 

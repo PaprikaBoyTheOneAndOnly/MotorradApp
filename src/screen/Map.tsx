@@ -23,7 +23,6 @@ export default class Map extends Component<IProps, IState> {
 
     constructor(props) {
         super(props);
-
         this.state = {
             routes: null,
             initialRegion: null,

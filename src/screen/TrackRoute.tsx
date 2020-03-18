@@ -10,8 +10,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import * as Firebase from '../service/FirebaseService';
 import ActivityRunner from '../component/ActivityRunner';
 import {LocationData} from 'expo-location';
-import _ from "lodash";
-import {Icon} from "react-native-elements";
+import _ from 'lodash';
+import {Icon} from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
 
 interface IProps {
@@ -102,7 +102,6 @@ export default class TrackRoute extends Component<IProps, IState> {
                     LocationService.stopTrackingPositionInBackground();
                 }
             });
-
         } else if (appState === 'background') {
             LocationService.trackPositionInBackground();
         }

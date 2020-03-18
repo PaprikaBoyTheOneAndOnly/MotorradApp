@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {globalStyles, IPhoto, IRoute, stackConfig} from '../data.module';
 import MapView, {Marker, Polyline} from 'react-native-maps';
 import {StackNavigationProp} from '@react-navigation/stack';
 import ActivityRunner from '../component/ActivityRunner';
-import {Image} from "react-native-elements";
+import {Image} from 'react-native-elements';
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -41,8 +41,10 @@ export default class Route extends Component<IProps, IState> {
         const locations: IPhotoLocation[] = [];
 
         route.photos.forEach(photo => {
-            const photoLat = Number(photo.coordinate.latitude.toString().substring(0, photo.coordinate.latitude.toString().indexOf('.') + 5));
-            const photoLong = Number(photo.coordinate.longitude.toString().substring(0, photo.coordinate.longitude.toString().indexOf('.') + 5));
+            const photoLat = Number(photo.coordinate.latitude.toString()
+                .substring(0, photo.coordinate.latitude.toString().indexOf('.') + 5));
+            const photoLong = Number(photo.coordinate.longitude.toString()
+                .substring(0, photo.coordinate.longitude.toString().indexOf('.') + 5));
             const foundLocation = locations.find(loc => {
                 const latDiff = Math.round((loc.lat > photoLat ? loc.lat - photoLat : photoLat - loc.lat) * 10000) / 10000;
                 const longDiff = Math.round((loc.long > photoLong ? loc.long - photoLong : photoLong - loc.long) * 10000) / 10000;
@@ -95,11 +97,12 @@ export default class Route extends Component<IProps, IState> {
                 photoMarkers = this.sortPhotosByLocation(route).map((location, index) =>
                     <Marker key={index} coordinate={{latitude: location.lat, longitude: location.long}}
                             onPress={() => this.props.navigation.navigate('RoutePhotos', {photos: location.photos})}>
-                        <Image source={{uri: location.photos[0].url}} style={{width: 75, height: 75}}
+                        <Image source={{uri: location.photos[0].url}} style={styles.image}
                                PlaceholderContent={<ActivityIndicator/>}/>
                     </Marker>
                 );
             }
+
             return (
                 <View style={{...styles.container}}>
                     <MapView style={styles.mapView} initialRegion={initialRegion}
@@ -124,7 +127,11 @@ const styles = StyleSheet.create(
         mapView: {
             flex: 1,
             width: '100%',
-            height: '100%'
+            height: '100%',
         },
+        image: {
+            width: 75,
+            height: 75,
+        }
     }
 );

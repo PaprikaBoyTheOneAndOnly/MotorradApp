@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {ActivityIndicator, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {globalStyles, IPhoto, IRoute, staticNavigationOptions} from '../data.module';
-import {StackNavigationProp} from "@react-navigation/stack";
-import * as Firebase from "../service/FirebaseService";
-import ActivityRunner from "../component/ActivityRunner";
-import {Image} from "react-native-elements";
+import {StackNavigationProp} from '@react-navigation/stack';
+import * as Firebase from '../service/FirebaseService';
+import ActivityRunner from '../component/ActivityRunner';
+import {Image} from 'react-native-elements';
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -41,17 +41,20 @@ export default class Photos extends Component<IProps, IState> {
     render() {
         if (this.state.routesLoaded) {
             const width = Math.round(Dimensions.get('window').width) - 20;
+            const imageStyle = {
+                width: width / 3,
+                height: width / 3,
+                marginBottom: 5
+            };
             const photos = this.state.routes
                 .filter(route => route.photos && route.photos.length > 0)
                 .map(({photos, name}, index) =>
-                    <TouchableOpacity onPress={() => this.openPhotos(photos)}>
-                        <Image key={index} source={{uri: photos[0].url}} style={{
-                            width: width / 3,
-                            height: width / 3,
-                            marginBottom: 5
-                        }} PlaceholderContent={<ActivityIndicator/>}/>
-                        <Text style={{color: 'grey', textAlign:'center'}}>{name}</Text>
-                    </TouchableOpacity>);
+                    <TouchableOpacity key={index} onPress={() => this.openPhotos(photos)}>
+                        <Image source={{uri: photos[0].url}} style={imageStyle}
+                               PlaceholderContent={<ActivityIndicator/>}/>
+                        <Text style={styles.text}>{name}</Text>
+                    </TouchableOpacity>
+                );
 
             return (
                 <ScrollView style={styles.container}>
@@ -81,5 +84,9 @@ const styles = StyleSheet.create(
             flexWrap: 'wrap',
             justifyContent: 'space-between',
         },
+        text: {
+            color: 'grey',
+            textAlign: 'center',
+        }
     }
 );
