@@ -1,18 +1,19 @@
 import React, {Component} from 'react';
 import {AppState, AppStateStatus, AsyncStorage, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {globalStyles, ICoordinate, IRoute, Route, stackConfig, StorageKey, Task} from '../data.module';
+import {globalStyles, ICoordinate, IRoute, IStoragePhoto, stackConfig, StorageKey, Task} from '../data.module';
 import * as TaskManager from 'expo-task-manager';
 import MapView, {Marker, Polyline} from 'react-native-maps';
 import * as LocationService from '../service/LocationService';
 import {defineTrackTask} from '../service/TaskManager';
 import {StackActions} from 'react-navigation';
 import {StackNavigationProp} from '@react-navigation/stack';
-import * as Firebase from '../service/FirebaseService';
 import ActivityRunner from '../component/ActivityRunner';
 import {LocationData} from 'expo-location';
 import _ from 'lodash';
 import {Icon} from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
+import md5 from 'md5';
+import moment from 'moment';
 
 interface IProps {
     navigation: StackNavigationProp<any>;
@@ -27,24 +28,41 @@ interface IState {
 defineTrackTask();
 
 export default class TrackRoute extends Component<IProps, IState> {
+    static savePhotoToAsyncStorage(navigation: StackNavigationProp<any>) {
+        const cameraOptions = {
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            quality: 0,
+            base64: true,
+        };
+
+        ImagePicker.launchCameraAsync(cameraOptions)
+            .then(response => {
+                if (!response.cancelled) {
+                    LocationService.getCurrentPosition().then(coordinate => {
+                        const photoData: IStoragePhoto = {
+                            // @ts-ignore
+                            uri: response.uri,
+                            // @ts-ignore
+                            name: md5(response.base64),
+                            coordinate: coordinate,
+                        };
+                        AsyncStorage.mergeItem(`${navigation.state.params.route.name}-PHOTOS`,
+                            JSON.stringify({
+                                [moment().format('dd.mm.yyy hh:MM:ss')]: {...photoData}
+                            })
+                        ).then();
+                    });
+                }
+            });
+    }
+
     static navigationOptions = ({navigation}) => ({
         ...stackConfig,
         ...navigation.state.params.options,
         headerRight: () => {
-            const cameraOptions = {
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                quality: 0,
-                base64: true,
-            };
-
             return (
-                <TouchableOpacity style={{marginRight: 20}} onPress={() => {
-                    ImagePicker.launchCameraAsync(cameraOptions).then(response => {
-                        console.log("save");
-                        console.log(response);
-                        // AsyncStorage.mergeItem(`${navigation.state.params.options.title}-PHOTOS`)
-                    });
-                }}>
+                <TouchableOpacity style={{marginRight: 20}}
+                                  onPress={() => TrackRoute.savePhotoToAsyncStorage(navigation)}>
                     <Icon name={'camera-alt'} color={'white'}/>
                 </TouchableOpacity>
             );
@@ -57,7 +75,7 @@ export default class TrackRoute extends Component<IProps, IState> {
             route: this.props.navigation.getParam('route'),
             remove: () => {
             },
-            initialCoordinates: null
+            initialCoordinates: null,
         };
     }
 
@@ -108,15 +126,12 @@ export default class TrackRoute extends Component<IProps, IState> {
     };
 
     private stopRoute = async () => {
-        const route = this.state.route as Route;
-        route.destination = await LocationService.getCurrentPosition();
-        //TODO calculation is not right
-        route.calculateDistance();
-        Firebase.saveRoute(route);
         this.props.navigation.dispatch(StackActions.replace(
             {
-                routeName: 'Route',
-                params: {route}
+                routeName: 'Upload',
+                params: {
+                    route: this.state.route
+                }
             }));
     };
 

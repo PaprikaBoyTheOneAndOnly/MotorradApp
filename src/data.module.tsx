@@ -29,6 +29,12 @@ export interface IPhoto {
     coordinate: ICoordinate,
 }
 
+export interface IStoragePhoto {
+    name: string;
+    uri: string;
+    coordinate: ICoordinate;
+}
+
 export interface IRouteKey {
     [key: string]: IRoute;
 }

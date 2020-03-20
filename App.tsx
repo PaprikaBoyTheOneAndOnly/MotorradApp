@@ -18,15 +18,11 @@ import {StyleSheet, Text, View} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import RoutePhotos from './src/screen/RoutePhotos';
 import Photo from './src/screen/Photo';
+import Upload from './src/screen/Upload';
 
 Firebase.initialize();
 
-const HomeStack = createStackNavigator(
-    {
-        Home,
-        TrackRoute,
-        Route
-    }, stackConfig);
+const HomeStack = createStackNavigator({Home, TrackRoute, Route, Upload}, stackConfig);
 
 const SettingsStack = createStackNavigator({Settings}, stackConfig);
 

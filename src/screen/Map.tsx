@@ -30,12 +30,9 @@ export default class Map extends Component<IProps, IState> {
     }
 
     componentDidMount() {
-        LocationService.getCurrentPosition().then((initialRegion: ICoordinate) => this.setState({initialRegion}));
-        Firebase.getRoutes().then((routes) => this.setState({routes}));
-        this.props.navigation.addListener('willFocus', () => {
-            Firebase.getRoutes()
-                .then((routes) => this.setState({routes}));
-        });
+        LocationService.getCurrentPosition()
+            .then((initialRegion: ICoordinate) => this.setState({initialRegion}));
+        Firebase.onRoutes((routes: IRoute[]) => this.setState({routes}));
     }
 
     render() {

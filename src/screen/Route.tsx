@@ -78,25 +78,10 @@ export default class Route extends Component<IProps, IState> {
             coordinates.push(route.destination);
 
             let photoMarkers;
-            //mock
-            route.photos = [{
-                url: 'https://i.pinimg.com/originals/22/fd/29/22fd2937158488665960e6ce771aea98.jpg',
-                coordinate: {
-                    latitude: 47.499364083677065,
-                    longitude: 8.720588805162087,
-                }
-            },
-                {
-                    url: 'https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png',
-                    coordinate: {
-                        latitude: 47.500100936784875,
-                        longitude: 8.722682688393371,
-                    }
-                }];
             if (route.photos && route.photos.length > 0) {
                 photoMarkers = this.sortPhotosByLocation(route).map((location, index) =>
                     <Marker key={index} coordinate={{latitude: location.lat, longitude: location.long}}
-                            onPress={() => this.props.navigation.navigate('RoutePhotos', {photos: location.photos})}>
+                            onPress={() => this.props.navigation.navigate('RoutePhotos', {photos: location.photos, routeName: route.name})}>
                         <Image source={{uri: location.photos[0].url}} style={styles.image}
                                PlaceholderContent={<ActivityIndicator/>}/>
                     </Marker>
@@ -105,11 +90,9 @@ export default class Route extends Component<IProps, IState> {
 
             return (
                 <View style={{...styles.container}}>
-                    <MapView style={styles.mapView} initialRegion={initialRegion}
-                             showsUserLocation>
+                    <MapView style={styles.mapView} initialRegion={initialRegion} showsUserLocation>
                         <Marker coordinate={route.origin} title={`Start ${route.name}`}/>
-                        <Polyline coordinates={coordinates} strokeWidth={4}
-                                  strokeColor={'#FCAD03'}/>
+                        <Polyline coordinates={coordinates} strokeWidth={4} strokeColor={'#FCAD03'}/>
                         <Marker coordinate={route.destination} title={`End ${route.name}`}/>
                         {photoMarkers}
                     </MapView>

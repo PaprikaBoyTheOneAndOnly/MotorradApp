@@ -29,27 +29,24 @@ export default class Photos extends Component<IProps, IState> {
     }
 
     componentDidMount() {
-        Firebase.getRoutes().then((routes) => this.setState({routes, routesLoaded: true}));
+        Firebase.onRoutes((routes) => this.setState({routes, routesLoaded: true}));
     }
 
-    openPhotos(photos: IPhoto[]) {
+    openPhotos(photos: IPhoto[], routeName) {
         this.props.navigation.navigate('RoutePhotos', {
             photos,
+            routeName,
         });
     }
 
     render() {
         if (this.state.routesLoaded) {
-            const width = Math.round(Dimensions.get('window').width) - 20;
-            const imageStyle = {
-                width: width / 3,
-                height: width / 3,
-                marginBottom: 5
-            };
+            const width = Math.round(Dimensions.get('window').width) / 100 * 31 - 2;
+            const imageStyle = {width: width, height: width};
             const photos = this.state.routes
                 .filter(route => route.photos && route.photos.length > 0)
                 .map(({photos, name}, index) =>
-                    <TouchableOpacity key={index} onPress={() => this.openPhotos(photos)}>
+                    <TouchableOpacity key={index} style={styles.opacityStyle} onPress={() => this.openPhotos(photos, name)}>
                         <Image source={{uri: photos[0].url}} style={imageStyle}
                                PlaceholderContent={<ActivityIndicator/>}/>
                         <Text style={styles.text}>{name}</Text>
@@ -82,11 +79,15 @@ const styles = StyleSheet.create(
             flex: 1,
             flexDirection: 'row',
             flexWrap: 'wrap',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-start',
         },
         text: {
             color: 'grey',
+            marginTop: 5,
             textAlign: 'center',
+        },
+        opacityStyle: {
+            margin: '1%',
         }
     }
 );

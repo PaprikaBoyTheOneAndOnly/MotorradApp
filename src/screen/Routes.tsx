@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import * as Firebase from '../service/FirebaseService';
 import {extractKeys} from '../service/FirebaseService';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -33,13 +33,7 @@ export default class Routes extends Component<IProps, IState> {
     }
 
     componentDidMount() {
-        this.loadRoutes();
-        this.props.navigation.addListener('willFocus', () => this.loadRoutes());
-    }
-
-    loadRoutes() {
-        Firebase.getRoutesWithKey()
-            .then((routes) => this.setState({routes, routesLoaded: true}));
+        Firebase.onRoutesWithKey((routes) => this.setState({routes, routesLoaded: true}))
     }
 
     openRoute = (route) => {
@@ -48,9 +42,9 @@ export default class Routes extends Component<IProps, IState> {
         }
     };
 
-    deleteRoute = (route) => {
-        Firebase.deleteRoute(route)
-            .then(() => this.loadRoutes());
+    deleteRoute = (key: string, route: IRoute) => {
+        Firebase.deleteRoute(key, route)
+            .catch(() => Alert.alert('Error', 'Could not delete route!\nPlease try again later.'));
     };
 
     renderRouteItem = ({item, index}, rowMap) => {
@@ -76,7 +70,7 @@ export default class Routes extends Component<IProps, IState> {
                 <TouchableOpacity style={styles.hiddenItem}
                                   onPress={() => {
                                       rowMap[index].closeRow();
-                                      this.deleteRoute(Object.keys(item)[0]);
+                                      this.deleteRoute(Object.keys(item)[0], route);
                                   }}>
                     <Text style={{color: 'white', fontSize: 20,}}>
                         Delete

@@ -10,7 +10,7 @@ export default class ActivityRunner extends Component<IProps, {}> {
     render() {
         return (
             <View style={styles.container}>
-                <ActivityIndicator size="large" color="#000000"/>
+                <ActivityIndicator size={'large'} color={'#000000'}/>
                 <Text>{`\n${this.props.text}`}</Text>
             </View>
         );
