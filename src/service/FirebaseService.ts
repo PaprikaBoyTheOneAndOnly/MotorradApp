@@ -11,8 +11,7 @@ const firebaseConfig = {
 export function initialize() {
     try {
         firebase.initializeApp(firebaseConfig);
-    } catch (e) {
-    }
+    } catch (e) { }
 }
 
 export function signUp(email: string, password: string) {
@@ -55,8 +54,8 @@ export async function savePhoto(uri: string, name: string, route: string, progre
     const blob = await response.blob();
 
     return new Promise((resolve, reject) => {
-        const task = firebase.storage().ref()
-            .child(`${firebase.auth().currentUser.uid}/${route}/${name}.jpg`)
+        const task = firebase.storage()
+            .ref(`${firebase.auth().currentUser.uid}/${route}/${name}.jpg`)
             .put(blob);
 
         task.on(firebase.storage.TaskEvent.STATE_CHANGED,
@@ -71,12 +70,12 @@ export async function savePhoto(uri: string, name: string, route: string, progre
     });
 }
 
-export function extractNameOfPhoto(url: string) {
+export function extractNameOfPhoto(url: string): string {
     const index = url.indexOf('.jpg');
     return url.substring(index - 32, index + 4);
 }
 
-export async function deletePhoto(routName: string, name: string) {
+export async function deletePhoto(routName: string, name: string): Promise<any> {
     return firebase.storage()
         .ref(`${firebase.auth().currentUser.uid}/${routName}/${name}`)
         .delete();

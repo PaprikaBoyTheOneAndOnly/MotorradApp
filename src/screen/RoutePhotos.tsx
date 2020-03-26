@@ -10,7 +10,6 @@ interface IProps {
 
 interface IState {
     photos: IPhoto[],
-
     [key: string]: any,
 }
 

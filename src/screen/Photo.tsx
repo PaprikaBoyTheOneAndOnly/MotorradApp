@@ -4,7 +4,7 @@ import {globalStyles, IPhoto, stackConfig} from '../data.module';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Image} from 'react-native-elements';
 import ActivityRunner from '../component/ActivityRunner';
-import * as Firebase from '../service/FirebaseService';
+import * as FirebaseService from '../service/FirebaseService';
 import {extractNameOfPhoto} from '../service/FirebaseService';
 
 interface IProps {
@@ -23,10 +23,11 @@ export default class Photo extends Component<IProps, IState> {
         headerTitle: 'Photo',
         headerRight: () => {
             const onPressDelete = () =>
-                Firebase.deletePhoto(navigation.state.params.routeName,
+                FirebaseService.deletePhoto(navigation.state.params.routeName,
                     extractNameOfPhoto(navigation.state.params.photo.url))
                     .then(() => navigation.goBack())
-                    .catch(() => Alert.alert('Error', 'Could not delete photo!\nPlease try again later.'));
+                    .catch(() => Alert.alert('Error', 'Could not delete photo!' +
+                        '\nPlease try again later.'));
 
             return (
                 <TouchableOpacity style={{marginRight: 20}} onPress={onPressDelete}>
